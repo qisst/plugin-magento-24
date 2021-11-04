@@ -34,7 +34,7 @@ define(
         });
         return Component.extend({
             defaults: {
-                template: 'QP_PaymentOption/payment/qppayment'
+                template: 'Qisst_Magento24/payment/qppayment'
             },
             getMailingAddress: function () {
                 return window.checkoutConfig.payment.checkmo.mailingAddress;

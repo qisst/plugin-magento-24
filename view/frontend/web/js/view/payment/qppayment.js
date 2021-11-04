@@ -11,7 +11,7 @@ define(
         rendererList.push(
             {
                 type: 'qppayment',
-                component: 'QP_PaymentOption/js/view/payment/method-renderer/qppayment-method'
+                component: 'Qisst_Magento24/js/view/payment/method-renderer/qppayment-method'
             }
         );
         return Component.extend({});

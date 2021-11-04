@@ -5,5 +5,5 @@
  */
 use Magento\Framework\Component\ComponentRegistrar;
 
-ComponentRegistrar::register(ComponentRegistrar::MODULE, 'QP_PaymentOption', __DIR__);
+ComponentRegistrar::register(ComponentRegistrar::MODULE, 'Qisst_Magento24', __DIR__);
 
