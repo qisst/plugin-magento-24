@@ -9,7 +9,8 @@
             "email": "info@qisstpay.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "dev", 
+    "prefer-stable": true,
     "require": {},
     "autoload": {
         "files": [
