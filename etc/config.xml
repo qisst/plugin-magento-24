@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+	<default>
+		<payment>
+			<qppayment>
+				<!-- <payment_action>authorize</payment_action> -->
+				<!-- You can use another methor like capture  -->
+                <model>QP\PaymentOption\Model\Payment\QpPayment</model>
+                <active>1</active>
+                <title>QisstPay</title>
+                <order_status>pending_payment</order_status>
+			</qppayment>
+		</payment>
+	</default>
+</config>
