@@ -1,52 +1,12 @@
-# Mage2 Module QP PaymentOption
+<img src="https://cdn.checkout.com/img/checkout-logo-online-payments.jpg" alt="Checkout.com" width="380"/>
 
-    ``qp/module-paymentoption``
-
- - [Main Functionalities](#markdown-header-main-functionalities)
- - [Installation](#markdown-header-installation)
- - [Configuration](#markdown-header-configuration)
- - [Specifications](#markdown-header-specifications)
- - [Attributes](#markdown-header-attributes)
-
-
-## Main Functionalities
-Qisstpay payment option
+## Qisstpay.com Magento 2.4 Extension
 
 ## Installation
-\* = in production please use the `--keep-generated` option
+The easiest and recommended way to install the Checkout.com Magento 2 extension is to run the following commands in a terminal, from your Magento 2 root directory:
 
-### Type 1: Zip file
-
- - Unzip the zip file in `app/code/QP`
- - Enable the module by running `php bin/magento module:enable QP_PaymentOption`
- - Apply database updates by running `php bin/magento setup:upgrade`\*
- - Flush the cache by running `php bin/magento cache:flush`
-
-### Type 2: Composer
-
- - Make the module available in a composer repository for example:
-    - private repository `repo.magento.com`
-    - public repository `packagist.org`
-    - public github repository as vcs
- - Add the composer repository to the configuration by running `composer config repositories.repo.magento.com composer https://repo.magento.com/`
- - Install the module composer by running `composer require qp/module-paymentoption`
- - enable the module by running `php bin/magento module:enable QP_PaymentOption`
- - apply database updates by running `php bin/magento setup:upgrade`\*
- - Flush the cache by running `php bin/magento cache:flush`
-
-
-## Configuration
-
- - QpPayment - payment/qppayment/*
-
-
-## Specifications
-
- - Payment Method
-	- QpPayment
-
-
-## Attributes
-
-
-
+```bash
+composer require qisst/plugin-magento-24
+bin/magento setup:upgrade
+rm -rf var/cache var/generation/ var/di
+bin/magento setup:di:compile && php bin/magento cache:clean

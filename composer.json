@@ -1,12 +1,12 @@
 {
-    "name": "qp/module-paymentoption",
+    "name": "qisst/plugin-magento-24",
     "description": "Qisstpay payment option",
     "type": "magento2-module",
     "license": "OSL-3.0",
     "authors": [
         {
-            "name": "Mage2Gen",
-            "email": "info@mage2gen.com"
+            "name": "Qadeer",
+            "email": "info@qisstpay.com"
         }
     ],
     "minimum-stability": "dev",
