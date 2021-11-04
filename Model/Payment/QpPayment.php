@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace QP\PaymentOption\Model\Payment;
+namespace Qisst\Magento24\Model\Payment;
 
 class QpPayment extends \Magento\Payment\Model\Method\AbstractMethod
 {

@@ -2,7 +2,7 @@
  * Copyright © 2016 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace QP\PaymentOption\Controller\Page;
+namespace Qisst\Magento24\Controller\Page;
 
 use Magento\Payment\Gateway\ConfigInterface;
 
