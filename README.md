@@ -1,4 +1,4 @@
-<img src="https://cdn.checkout.com/img/checkout-logo-online-payments.jpg" alt="Checkout.com" width="380"/>
+<img src="https://qisstpay.com/images/qisstpayLogoHd.png?2c17eccafe68477653388f509c7037bf" alt="Qisstpay.com" width="380"/>
 
 ## Qisstpay.com Magento 2.4 Extension
 
