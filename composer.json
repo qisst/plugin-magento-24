@@ -1,7 +1,8 @@
 {
-    "name": "qisst/plugin-magento-24",
+    "name": "qisst/magento24",
     "description": "Qisstpay payment option",
     "type": "magento2-module",
+    "version": "1.0.1",
     "license": "OSL-3.0",
     "authors": [
         {
@@ -17,7 +18,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "QP\\PaymentOption\\": ""
+            "Qisst\\Magento24\\": ""
         }
     }
 }
