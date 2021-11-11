@@ -45,6 +45,11 @@ class createiframe extends \Magento\Framework\App\Action\Action
 
 
         $key = $this->_encryptor->decrypt($key);
+
+        $url = $this->_scopeConfig->getValue(
+          'qp/config/qp_url',
+          \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
         $curl = curl_init();
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -54,7 +59,7 @@ class createiframe extends \Magento\Framework\App\Action\Action
         $objctManager = \Magento\Framework\App\ObjectManager::getInstance();
         $remote = $objctManager->get('Magento\Framework\HTTP\PhpEnvironment\RemoteAddress');
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://sandbox.qisstpay.com/api/send-data',
+          CURLOPT_URL => $url,
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
