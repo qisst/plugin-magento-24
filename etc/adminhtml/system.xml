@@ -15,9 +15,9 @@
                     <config_path>qp/config/merchant_api_key</config_path>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
-                <field id="url" translate="label" translate="label" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="url" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <config_path>qp/config/qp_url</config_path>
-                    <label>URL</label>
+                    <label>Url</label>
                 </field>
             </group>
         </section>
