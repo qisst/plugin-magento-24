@@ -9,4 +9,5 @@ The easiest and recommended way to install the Qisstpay.com Magento 2 extension 
 composer require qisst/magento24:dev-main
 php bin/magento setup:upgrade
 rm -rf var/cache var/generation/ var/di
-bin/magento setup:di:compile && php bin/magento cache:clean
+bin/magento setup:di:compile
+php bin/magento cache:clean
