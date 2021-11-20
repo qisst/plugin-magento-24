@@ -46,10 +46,12 @@ class createiframe extends \Magento\Framework\App\Action\Action
 
         $key = $this->_encryptor->decrypt($key);
 
-        $url = $this->_scopeConfig->getValue(
-          'qp/config/qp_url',
+        $is_live = $this->_scopeConfig->getValue(
+          'qp/config/qp_is_live',
           \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
+
+        $url = $is_live == 1? 'https://qisstpay.com/api/send-data':'https://sandbox.qisstpay.com/api/send-data';
         $curl = curl_init();
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();

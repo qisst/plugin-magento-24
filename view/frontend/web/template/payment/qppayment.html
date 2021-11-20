@@ -13,7 +13,7 @@
         <label data-bind="attr: {'for': getCode()}" class="label"><span data-bind="text: getTitle()"></span></label>
     </div>
     <div class="payment-method-content">
-        <iframe id="qisttpayifram" width="100%" height="600"  src="<?php echo esc_url($_SESSION['iframe_url']); ?>"  frameborder="0" allowfullscreen style="background: #FFFFFF;" ></iframe>
+        <iframe id="qisttpayifram" width="100%"  src="<?php echo esc_url($_SESSION['iframe_url']); ?>"  frameborder="0" allowfullscreen style="background: #f8f8f8;padding-top:48px;min-height: 600px;" ></iframe>
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"

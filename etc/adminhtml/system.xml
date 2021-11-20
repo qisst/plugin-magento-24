@@ -16,8 +16,9 @@
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
                 <field id="url" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <config_path>qp/config/qp_url</config_path>
-                    <label>Url</label>
+                    <config_path>qp/config/qp_is_live</config_path>
+                    <label>Is live</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
         </section>
