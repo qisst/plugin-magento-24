@@ -69,9 +69,9 @@ class createiframe extends \Magento\Framework\App\Action\Action
           CURLOPT_FOLLOWLOCATION => true,
           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
           CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS =>'{"partner_id":"foree","fname":"'.$cart_data['firstname'].'","mname":"",
+          CURLOPT_POSTFIELDS =>'{"partner_id":"","fname":"'.$cart_data['firstname'].'","mname":"",
           "lname":"'.$cart_data['lastname'].'","email":"","ip_addr":"'.$remote->getRemoteAddress().
-          '","shipping_info":{"addr1":"'.$cart_data['street'].'","addr2":"","state":"'.$cart_data['region'].'","city":"'.$cart_data['city'].'","zip":"'.$cart_data['postcode'].'"},"billing_info":{"addr1":"'.$cart_data['street'].'","addr2":"","state":"'.$cart_data['region'].'","city":"'.$cart_data['city'].'","zip":"'.$cart_data['postcode'].'"},"total_amount":'.$cart_data['grand_total'].',"shipping_details":{},"card_details":{},"itemFlag":true,"line_items":[{"sku":"r","name":"gift3","type":"88","quantity":1,"category":"4","subcategory":"p","description":"This is a test description of a test product.","color":"blue","size":"M","brand":"gucci","unit_price":3,"amount":222,"shipping_attributes":{"weight":"5","dimensions":{"height":"5","width":"5","length":"5"}}}]}',
+          '","shipping_info":{"addr1":"'.$cart_data['street'].'","addr2":"","state":"'.$cart_data['region'].'","city":"'.$cart_data['city'].'","zip":"'.$cart_data['postcode'].'"},"billing_info":{"addr1":"'.$cart_data['street'].'","addr2":"","state":"'.$cart_data['region'].'","city":"'.$cart_data['city'].'","zip":"'.$cart_data['postcode'].'"},"total_amount":'.$cart_data['grand_total'],
           CURLOPT_HTTPHEADER => array(
             'sec-ch-ua: "Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"',
             'sec-ch-ua-mobile: ?0',
