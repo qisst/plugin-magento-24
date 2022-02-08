@@ -20,16 +20,17 @@ define(
                 const data = e.data;
                 var decoded = null;
                 try {
-                    decoded = JSON.parse(data);                          
+                    decoded = JSON.parse(data);
                     var flag = decoded.hasOwnProperty('message');
                     var successStatus = decoded.success;
                     if(flag == true && successStatus == true){
-                        jQuery( "#qp-submit-button" ).trigger('click');
+                      location.replace("../checkout/onepage/success")
+                        //jQuery( "#qp-submit-button" ).trigger('click');
                         ///form Submit
                     }
                 } catch(e){
                     return;
-                }    
+                }
             });
         });
         return Component.extend({
