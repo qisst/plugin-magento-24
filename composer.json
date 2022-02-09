@@ -2,7 +2,7 @@
     "name": "qisst/magento24",
     "description": "Qisstpay payment option",
     "type": "magento2-module",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "license": "OSL-3.0",
     "authors": [
         {
@@ -10,7 +10,7 @@
             "email": "info@qisstpay.com"
         }
     ],
-    "minimum-stability": "dev", 
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {},
     "autoload": {

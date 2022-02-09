@@ -16,6 +16,14 @@ class createiframe extends \Magento\Framework\App\Action\Action
     protected $_scopeConfig;
 
     protected $_encryptor;
+    private $checkoutSession;
+
+    /**
+     * Constructor
+     *
+     * @param Session $checkoutSession
+     */
+
     /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
@@ -24,11 +32,13 @@ class createiframe extends \Magento\Framework\App\Action\Action
        \Magento\Framework\App\Action\Context $context,
        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
        \Magento\Framework\Encryption\EncryptorInterface $encryptor,
+    \Magento\Checkout\Model\Session $checkoutSession,
        \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory)
     {
        $this->resultJsonFactory = $resultJsonFactory;
        $this->_scopeConfig = $scopeConfig;
        $this->_encryptor = $encryptor;
+       $this->checkoutSession = $checkoutSession;
        parent::__construct($context);
     }
     /**
@@ -55,7 +65,8 @@ class createiframe extends \Magento\Framework\App\Action\Action
         $curl = curl_init();
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $cart = $objectManager->get('\Magento\Checkout\Model\Cart'); 
+        $orderId = $this->checkoutSession->getData('last_order_id');
+	      $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
         $shippingAddress = $cart->getQuote()->getShippingAddress();
         $cartId = $cart->getQuote()->getId();
         $cart_data = $shippingAddress->getData();
@@ -95,7 +106,7 @@ class createiframe extends \Magento\Framework\App\Action\Action
             "card_details":{},
             "itemFlag":false,
             "line_items":[],
-            "merchant_order_id": "'.$cartId.'",
+            "merchant_order_id": "'.$orderId.'",
             "total_amount":'.$cart_data['grand_total'].'
           }',
           CURLOPT_HTTPHEADER => array(
@@ -109,13 +120,13 @@ class createiframe extends \Magento\Framework\App\Action\Action
             'Cookie: XSRF-TOKEN=eyJpdiI6Im1XQkpKd3lYbTlObDFBRjk1NFo0S1E9PSIsInZhbHVlIjoiTWJKNEJoMlZTSUFsOStCSEp6WWpJdWJnZzh6VkViL0FJbjJvRW5JVm96MlN5a0lRQkJ6U2hScmZES3RoSHdOeEJxTjVZTWxPWWpCNHQydVplemwzOFBTcjIyVVp5Y2VNY2JPMEp3ZFF1M0YzWXNSeDYyekxCN3ppNGNHdTlMTlEiLCJtYWMiOiI2OGZhMzM0NDYzOWZkZjFhYTdiYjU3Yzg0ZTAzYjcxYjMxNDdhYWYxNDYxY2FiN2U1YmM5ZGI0ZTgyMzhhOWM4IiwidGFnIjoiIn0%3D; qisstpay_sandbox_session=eyJpdiI6IklpVnRIVkhxYW1YWDM3cUZGNHB1V0E9PSIsInZhbHVlIjoialdYNUxjUllzR3JhMDJuUVZ5SHRzdUt1N21VYVpYcE9neGZRN2pQYU4yS0lEWGtNaFFoSjFIWlI4aERNa2hEYVJiOFlSUVZicW84blBVQlBWaXlHWElEQitzTlNFcGExWjZld3FuOGRSSFQyMmo2R2Vmb2VFUHhNOGhSTmRaREYiLCJtYWMiOiJiZDdjNTYyOWVlN2I5YjAyMTZjNTllY2NlOGJiYTA1YjgyOTRmYTA4NTllMTE0OWYxZDQ2NmY3NmE5NmMwMWE0IiwidGFnIjoiIn0%3D'
           ),
         ));
-        
+
         $response = curl_exec($curl);
-        
+
         curl_close($curl);
 
         $result = $this->resultJsonFactory->create();
 
         return $result->setData(json_decode($response, 1));
-    } 
+    }
 }
