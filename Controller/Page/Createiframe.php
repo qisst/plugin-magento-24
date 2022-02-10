@@ -65,6 +65,12 @@ class createiframe extends \Magento\Framework\App\Action\Action
         $curl = curl_init();
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
+        $connection= $this->_resources->getConnection();
+        $themeTable = 'sales_order';
+        $sql = "SELECT `entity_id` FROM `sales_order` where entity_id = (SELECT MAX(`entity_id`) FROM `sales_order`)";
+        $orderIds = $connection->fetchAll($sql);
+        $orderno = $orderIds[0]['entity_id'];
         $orderId = $this->checkoutSession->getData('last_order_id');
         $orderId = $orderId +1;
 	      $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
@@ -107,7 +113,7 @@ class createiframe extends \Magento\Framework\App\Action\Action
             "card_details":{},
             "itemFlag":false,
             "line_items":[],
-            "merchant_order_id": "'.$orderId.'",
+            "merchant_order_id": "'.$orderno.'",
             "total_amount":'.$cart_data['grand_total'].'
           }',
           CURLOPT_HTTPHEADER => array(
@@ -187,7 +193,7 @@ curl_setopt($ch, CURLOPT_HTTP_VERSION,CURL_HTTP_VERSION_1_1);
             "card_details":{},
             "itemFlag":false,
             "line_items":[],
-            "merchant_order_id": "'.$orderId.'",
+            "merchant_order_id": "'.$orderno.'",
             "total_amount":'.$cart_data['grand_total'].'
           }';
 curl_setopt($ch, CURLOPT_POSTFIELDS, $jayParsedAry);
@@ -372,12 +378,12 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, $jayParsedAry);
 
         $result = $this->resultJsonFactory->create();
 //var_dump($server_output);
-$writer = new \Zend\Log\Writer\Stream(BP . '/var/log/qisstpay.log');
-  $logger = new \Zend\Log\Logger();
-  $logger->addWriter($writer);
-  $logger->info('Your text message');
-  $logger->info($server_output);
-  $logger->info($orderId);
+// $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/qisstpay.log');
+//   $logger = new \Zend\Log\Logger();
+//   $logger->addWriter($writer);
+//   $logger->info('Your text message');
+//   $logger->info($server_output);
+//   $logger->info($orderId);
 
         return $result->setData(json_decode($response));
     }
