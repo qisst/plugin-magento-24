@@ -67,8 +67,9 @@ class createiframe extends \Magento\Framework\App\Action\Action
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
         $connection= $this->_resources->getConnection();
-        $themeTable = 'sales_order';
-        $sql = "SELECT `entity_id` FROM `sales_order` where entity_id = (SELECT MAX(`entity_id`) FROM `sales_order`)";
+        $tableName   = $connection->getTableName('sales_order');
+        //$themeTable = 'sales_order';
+        $sql = "SELECT `entity_id` FROM ". $tableName ." where entity_id = (SELECT MAX(`entity_id`) FROM ". $tableName .")";
         $orderIds = $connection->fetchAll($sql);
         $orderno = $orderIds[0]['entity_id'];
         $orderId = $this->checkoutSession->getData('last_order_id');
