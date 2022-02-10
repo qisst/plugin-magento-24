@@ -114,18 +114,49 @@ class createiframe extends \Magento\Framework\App\Action\Action
             'Authorization: Basic '.$key,
             'Content-Type: application/json',
             'Accept: */*'
+
               ),
         ));
 
-          $ch = curl_init();
-          curl_setopt($ch, CURLOPT_URL,$url);
-          curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-          curl_setopt($ch, CURLOPT_CUSTOMREQUEST,'POST');
-          curl_setopt($ch, CURLOPT_ENCODING,'');
-          curl_setopt($ch, CURLOPT_MAXREDIRS,10);
-          curl_setopt($ch, CURLOPT_TIMEOUT,0);
-          curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
-          curl_setopt($ch, CURLOPT_HTTP_VERSION,CURL_HTTP_VERSION_1_1);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,'POST');
+curl_setopt($ch, CURLOPT_ENCODING,'');
+curl_setopt($ch, CURLOPT_MAXREDIRS,10);
+curl_setopt($ch, CURLOPT_TIMEOUT,0);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
+curl_setopt($ch, CURLOPT_HTTP_VERSION,CURL_HTTP_VERSION_1_1);
+
+          // $post = [
+          //   "partner_id":"magento",
+          //   "fname":"'.$cart_data['firstname'].'",
+          //   "mname":"",
+          //   "lname":"'.$cart_data['lastname'].'",
+          //   "email":"",
+          //   "ip_addr":"'.$remote->getRemoteAddress().'",
+          //   "shipping_info":{
+          //     "addr1":"'.$cart_data['street'].'",
+          //     "addr2":"",
+          //     "state":"'.$cart_data['region'].'",
+          //     "city":"'.$cart_data['city'].'",
+          //     "zip":"'.$cart_data['postcode'].'"
+          //   },
+          //   "billing_info":{
+          //     "addr1":"'.$cart_data['street'].'",
+          //     "addr2":"",
+          //     "state":"'.$cart_data['region'].'",
+          //     "city":"'.$cart_data['city'].'",
+          //     "zip":"'.$cart_data['postcode'].'"
+          //   },
+          //   "shipping_details":{},
+          //   "card_details":{},
+          //   "itemFlag":false,
+          //   "line_items":[],
+          //   "merchant_order_id": "'.$orderId.'",
+          //   "total_amount":'.$cart_data['grand_total'].'
+          // ];
+          //$authorization = "Authorization: Bearer WjcbAvjYPEOjqNiVb6sF4aRPYhttzuuVu5cIUgPkSHl5MqKUS446f61h9ml8";
           curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Authorization: Basic '.$key,
             'Content-Type: application/json',
@@ -159,18 +190,194 @@ class createiframe extends \Magento\Framework\App\Action\Action
             "merchant_order_id": "'.$orderId.'",
             "total_amount":'.$cart_data['grand_total'].'
           }';
-          curl_setopt($ch, CURLOPT_POSTFIELDS, $jayParsedAry);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $jayParsedAry);
+          // curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query(
+          //   array (
+          //     'partner_id' => 'magento',
+          //     'fname' => 'Zubeer',
+          //     'mname' => 'Test2',
+          //     'lname' => 'Account',
+          //     'total_amount' => 1500,
+          //     'email' => 'zaheer.ahmed@qisstpay.com',
+          //     'phone_no' => '923011000201',
+          //     'shipping_details' =>
+          //     array (
+          //     ),
+          //     'card_details' =>
+          //     array (
+          //     ),
+          //     'shipping_info' =>
+          //     array (
+          //       'addr1' => 'Address line 1',
+          //       'addr2' => '',
+          //       'state' => 'Lahore',
+          //       'city' => 'Lahore',
+          //       'zip' => '',
+          //     ),
+          //     'billing_info' =>
+          //     array (
+          //       'addr1' => 'Address line 1',
+          //       'addr2' => '',
+          //       'state' => 'Karachi',
+          //       'city' => 'Karachi',
+          //       'zip' => '',
+          //     ),
+          //     'itemFlag' => true,
+          //     'ip_addr' => '192.168.1.1',
+          //     'line_items' =>
+          //     array (
+          //       0 =>
+          //       array (
+          //         'sku' => 'r',
+          //         'name' => 'gift3',
+          //         'type' => '88',
+          //         'quantity' => 1,
+          //         'category' => '4',
+          //         'subcategory' => 'p',
+          //         'description' => 'This is a test description of a test product.',
+          //         'color' => 'blue',
+          //         'size' => 'M',
+          //         'brand' => 'gucci',
+          //         'unit_price' => 3,
+          //         'amount' => 5000,
+          //         'shipping_attributes' =>
+          //         array (
+          //           'weight' => '5',
+          //           'dimensions' =>
+          //           array (
+          //             'height' => '5',
+          //             'width' => '5',
+          //             'length' => '5',
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //     'currency' => 'PKR',
+          //     'merchant_order_id' => '123123',
+          //     'qisstpay_nid' => 'dgdh',
+          //     'call_back_url' => 'https://example.com/webhook/listen',
+          //     'redirect_url' => 'https://example.com/payment/success-or-failure',
+          //     'tax_amount' => 1200,
+          //     'shipping_amount' => 1200,
+          //     'user_id' => 12,
+          //   )
+          //   // 'partner_id'=>'magento',
+          //   //     'fname'=> $cart_data['firstname'],
+          //   //     'mname'=>'',
+          //   //     'lname'=>$cart_data['lastname'],
+          //   //     'email'=>'',
+          //   //     'ip_addr'=> $remote->getRemoteAddress(),
+          //   //     'shipping_info'=>[
+          //   //       'addr1'=>$cart_data['street'],
+          //   //       'addr2'=>'',
+          //   //       'state'=>$cart_data['region'],
+          //   //       'city'=> $cart_data['city'],
+          //   //       'zip'=> $cart_data['postcode']
+          //   //     ],
+          //   //     'billing_info'=>[
+          //   //       'addr1'=>$cart_data['street'],
+          //   //       'addr2'=>'',
+          //   //       'state'=>$cart_data['region'],
+          //   //       'city'=>$cart_data['city'],
+          //   //       'zip'=>$cart_data['postcode']
+          //   //     ],
+          //   //     'shipping_details'=>[],
+          //   //     'card_details'=>[],
+          //   //     'itemFlag'=>false,
+          //   //     'line_items'=>[],
+          //   //     'merchant_order_id'=>$orderId,
+          //   //     'total_amount'=>$cart_data['grand_total']
+          //   ));
           $server_output = curl_exec($ch);
           curl_close ($ch);
-          $response = curl_exec($curl);
-          $result = curl_close($curl);
-          $result = $this->resultJsonFactory->create();
-          // $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/qistpay.log');
-          // $logger = new \Zend\Log\Logger();
-          // $logger->addWriter($writer);
-          // $logger->info('Your text message');
-          // $logger->info($server_output);
-          // $logger->info($response);
+
+
+        //   CURLOPT_POSTFIELDS =>[
+        //     'partner_id'=>'magento',
+        //     'fname'=> $cart_data["firstname"],
+        //     'mname'=>'',
+        //     'lname'=>$cart_data['lastname'],
+        //     'email'=>'',
+        //     'ip_addr'=> $remote->getRemoteAddress(),
+        //     'shipping_info'=>[
+        //       'addr1'=>$cart_data['street'],
+        //       'addr2'=>'',
+        //       'state'=>$cart_data['region'],
+        //       'city'=> $cart_data['city'],
+        //       'zip'=> $cart_data['postcode']
+        //     ],
+        //     'billing_info'=>[
+        //       'addr1'=>$cart_data['street'],
+        //       'addr2'=>'',
+        //       'state'=>$cart_data['region'],
+        //       'city'=>$cart_data['city'],
+        //       'zip'=>$cart_data['postcode']
+        //     ],
+        //     'shipping_details'=>[],
+        //     'card_details'=>[],
+        //     'itemFlag'=>false,
+        //     'line_items'=>[],
+        //     'merchant_order_id'=>$orderId,
+        //     'total_amount'=>$cart_data['grand_total']
+        //   ]
+        //   ,
+        //     CURLOPT_HTTPHEADER => array(
+        //       'sec-ch-ua: "Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"',
+        //       'sec-ch-ua-mobile: ?0',
+        //       'Authorization: Basic '.$key,
+        //       'Content-Type: application/json',
+        //       'Accept: */*',
+        //       'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36',
+        //       'sec-ch-ua-platform: "Windows"',
+        //       'Cookie: XSRF-TOKEN=eyJpdiI6Im1XQkpKd3lYbTlObDFBRjk1NFo0S1E9PSIsInZhbHVlIjoiTWJKNEJoMlZTSUFsOStCSEp6WWpJdWJnZzh6VkViL0FJbjJvRW5JVm96MlN5a0lRQkJ6U2hScmZES3RoSHdOeEJxTjVZTWxPWWpCNHQydVplemwzOFBTcjIyVVp5Y2VNY2JPMEp3ZFF1M0YzWXNSeDYyekxCN3ppNGNHdTlMTlEiLCJtYWMiOiI2OGZhMzM0NDYzOWZkZjFhYTdiYjU3Yzg0ZTAzYjcxYjMxNDdhYWYxNDYxY2FiN2U1YmM5ZGI0ZTgyMzhhOWM4IiwidGFnIjoiIn0%3D; qisstpay_sandbox_session=eyJpdiI6IklpVnRIVkhxYW1YWDM3cUZGNHB1V0E9PSIsInZhbHVlIjoialdYNUxjUllzR3JhMDJuUVZ5SHRzdUt1N21VYVpYcE9neGZRN2pQYU4yS0lEWGtNaFFoSjFIWlI4aERNa2hEYVJiOFlSUVZicW84blBVQlBWaXlHWElEQitzTlNFcGExWjZld3FuOGRSSFQyMmo2R2Vmb2VFUHhNOGhSTmRaREYiLCJtYWMiOiJiZDdjNTYyOWVlN2I5YjAyMTZjNTllY2NlOGJiYTA1YjgyOTRmYTA4NTllMTE0OWYxZDQ2NmY3NmE5NmMwMWE0IiwidGFnIjoiIn0%3D'
+        //     ),
+        // ));
+
+
+
+        //
+        // $orderData =[
+        //             'currency_id'  => 'PKR',
+        //             'email'        => $cart_data['email'],
+        //             'paymentMethod'=> [
+        //               'method'=> 'cashondelivery'
+        //             ],
+        //             'shipping_address' =>[
+        //                 'firstname'    => $fnameorder,
+        //                 'lastname'     => $lnameorder,
+        //                 'street' => $str1order,
+        //                 'city' => $cityorder,
+        //                 'country_id' => '',
+        //                 'region' => $regionorder,
+        //                 'region_id'=> $regionorder,
+        //                 'postcode' => $postcodeorder,
+        //                 'telephone' => $phoneorder,
+        //                 'fax' => $phoneorder,
+        //                 'save_in_address_book' => 1
+        //             ],
+        //             'items'=> [
+        //                 //array of product which order you want to create
+        //                 ['product_id'=>'1','qty'=>1],
+        //                 ['product_id'=>'2','qty'=>1]
+        //             ]
+        //         ];
+
+
+
+
+        $response = curl_exec($curl);
+        //print_r($response);
+
+        $result = curl_close($curl);
+
+        $result = $this->resultJsonFactory->create();
+//var_dump($server_output);
+$writer = new \Zend\Log\Writer\Stream(BP . '/var/log/qisstpay.log');
+  $logger = new \Zend\Log\Logger();
+  $logger->addWriter($writer);
+  $logger->info('Your text message');
+  $logger->info($server_output);
+  $logger->info($orderId);
 
         return $result->setData(json_decode($response));
     }
