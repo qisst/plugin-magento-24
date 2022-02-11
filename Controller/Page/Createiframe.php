@@ -65,13 +65,18 @@ class createiframe extends \Magento\Framework\App\Action\Action
         $curl = curl_init();
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        //$orderId = $this->checkoutSession->getData('last_order_id');
+
         $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
         $connection= $this->_resources->getConnection();
-        $tableName   = $connection->getTableName('sales_order');
         //$themeTable = 'sales_order';
-        $sql = "SELECT `entity_id` FROM ". $tableName ." where entity_id = (SELECT MAX(`entity_id`) FROM ". $tableName .")";
+        $tableName   = $connection->getTableName('sales_order');
+        //$sql = "SELECT `entity_id` FROM `sales_order` where entity_id = (SELECT MAX(`entity_id`) FROM `sales_order`)";
+        $sql = "SELECT `entity_id` FROM `". $tableName ."` where entity_id = (SELECT MAX(`entity_id`) FROM `". $tableName ."`)";
         $orderIds = $connection->fetchAll($sql);
-        $orderno = $orderIds[0]['entity_id'];
+        $orderst = $orderIds[0]['entity_id'];
+        $orderno = (int)$orderst;
+        $orderno = $orderno +1;
         $orderId = $this->checkoutSession->getData('last_order_id');
         $orderId = $orderId +1;
 	      $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
@@ -379,12 +384,13 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, $jayParsedAry);
 
         $result = $this->resultJsonFactory->create();
 //var_dump($server_output);
-// $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/qisstpay.log');
-//   $logger = new \Zend\Log\Logger();
-//   $logger->addWriter($writer);
-//   $logger->info('Your text message');
-//   $logger->info($server_output);
-//   $logger->info($orderId);
+$writer = new \Zend\Log\Writer\Stream(BP . '/var/log/qisstpay.log');
+  $logger = new \Zend\Log\Logger();
+  $logger->addWriter($writer);
+  $logger->info('Below are OrderNo');
+    $logger->info($orderno);
+  $logger->info($server_output);
+  $logger->info($orderId);
 
         return $result->setData(json_decode($response));
     }
