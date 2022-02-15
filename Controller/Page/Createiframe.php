@@ -14,7 +14,6 @@ class createiframe extends \Magento\Framework\App\Action\Action
     protected $resultJsonFactory;
 
     protected $_scopeConfig;
-
     protected $_encryptor;
     private $checkoutSession;
 
