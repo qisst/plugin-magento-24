@@ -62,7 +62,7 @@ class Raptor implements RaptorInterface
 
     public function __construct(
       \Magento\Config\Model\ResourceModel\Config $config,
-            WebsiteFactory $websiteFactory,
+             WebsiteFactory $websiteFactory,
              Website $websiteResourceModel,
              Store $storeResourceModel,
              Group $groupResourceModel,
@@ -72,26 +72,41 @@ class Raptor implements RaptorInterface
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
     \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory)
      {
-       $this->config = $config;
-       $this->websiteFactory = $websiteFactory;
+        $this->config = $config;
+        $this->websiteFactory = $websiteFactory;
         $this->websiteResourceModel = $websiteResourceModel;
         $this->storeFactory = $storeFactory;
         $this->groupFactory = $groupFactory;
         $this->groupResourceModel = $groupResourceModel;
         $this->storeResourceModel = $storeResourceModel;
         $this->eventManager = $eventManager;
-
-         $this->productRepository = $productRepository;
-           $this->resultJsonFactory = $resultJsonFactory;
-
+        $this->productRepository = $productRepository;
+        $this->resultJsonFactory = $resultJsonFactory;
      }
-
-
-
     /* This is Validator Function Only Start */
     public function returnOrderId($quoteid) {
-
-        return "Return Response";
+      $entityDesired = $quoteid;
+      $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+      $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
+      $shippingAddress = $cart->getQuote()->getShippingAddress();
+      $cartId = $cart->getQuote()->getId();
+      $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
+      $connection= $this->_resources->getConnection();
+      $tableName   = $connection->getTableName('sales_order_item');
+      $tableNamefilter   = $connection->getTableName('sales_order_grid');
+      $sql = "SELECT `order_id` FROM `".$tableName."` where item_id = ". $entityDesired;
+      $itemno = $connection->fetchAll($sql);
+      $orderst = $itemno[0]['order_id'];
+      $ordern = (int)$orderst;
+      $sqlfilter = "SELECT `increment_id` FROM `".$tableNamefilter."` where entity_id = ". $ordern;
+      $orderno = $connection->fetchAll($sqlfilter);
+      $orderst = $orderno[0]['increment_id'];
+      $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/qisstpayfilter.log');
+      $logger = new \Zend\Log\Logger();
+      $logger->addWriter($writer);
+      $logger->info('Below are OrderNo Refined');
+      $logger->info($ordern);
+        return $orderst;
     }
 /* This is Validator Function Only  End */
 }
