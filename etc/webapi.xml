@@ -1,9 +1,18 @@
 <?xml version="1.0"?>
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- <route method="GET" url="/V1/cozmot/storeautomationapi">
+        <service class="Cozmot\StoreAutomationApi\Api\RaptorInterface" method="customGetMethod"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route> -->
+<!--POST API Start-->
     <route method="GET" url="/V1/qp/orderid">
 <service class="Qisst\Magento24\Api\RaptorInterface" method="returnOrderId"/>
         <resources>
             <resource ref="anonymous"/>
         </resources>
     </route>
+
+
 </routes>

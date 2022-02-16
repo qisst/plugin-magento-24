@@ -20,7 +20,7 @@ define(
                 const data = e.data;
                 var decoded = null;
                 try {
-                    decoded = JSON.parse(data);                          
+                    decoded = JSON.parse(data);
                     var flag = decoded.hasOwnProperty('message');
                     var successStatus = decoded.success;
                     if(flag == true && successStatus == true){
@@ -29,7 +29,7 @@ define(
                     }
                 } catch(e){
                     return;
-                }    
+                }
             });
         });
         return Component.extend({
