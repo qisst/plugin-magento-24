@@ -14,5 +14,11 @@
         </resources>
     </route>
 
+    <route method="POST" url="/V1/qp/create-order">
+  <service class="Qisst\Magento24\Api\RaptorInterface" method="createOrder"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
 
 </routes>

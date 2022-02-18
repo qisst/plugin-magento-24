@@ -108,5 +108,8 @@ class Raptor implements RaptorInterface
       $logger->info($ordern);
         return $orderst;
     }
+    public function createOrder($orderfname, $orderlname, $orderemail, $orderphone, $orderaddress1, $orderaddress2, $ordercity, $orderstate, $orderpostcode, $ordercountry, $orderquantiry, $orderprice, $ordershipping, $ordertax, $ordernote){
+      return 9294;
+    }
 /* This is Validator Function Only  End */
 }
