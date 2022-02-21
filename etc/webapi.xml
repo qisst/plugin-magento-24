@@ -21,4 +21,10 @@
         </resources>
     </route>
 
+    <route method="POST" url="/V1/qpc/create-order">
+<service class="Qisst\Magento24\Api\OnepageInterface" method="placeOrder"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
 </routes>
