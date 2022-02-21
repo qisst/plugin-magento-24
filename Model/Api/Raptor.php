@@ -96,11 +96,13 @@ class Raptor implements RaptorInterface
       $subSeqTable = $connection->getTableName('sales_order_grid');
       $customOrderGet = "SELECT `entity_id` FROM `".$parentTable."` where quote_id =".$entityDesired ;
       $customOrderNo = $connection->fetchAll($customOrderGet);
-      $customOrderReturn = $customOrderNo[0]['entity_id'];
-      $sqlDetail = "SELECT `increment_id` FROM `".$subSeqTable."` where entity_id =".$customOrderReturn;
-      $orderno = $connection->fetchAll($sqlDetail);
-      $orderst = $orderno[0]['increment_id'];
-      return $orderst;
+      if($customOrderNo){
+        $customOrderReturn = $customOrderNo[0]['entity_id'];
+        $sqlDetail = "SELECT `increment_id` FROM `".$subSeqTable."` where entity_id =".$customOrderReturn;
+        $orderno = $connection->fetchAll($sqlDetail);
+        $orderst = $orderno[0]['increment_id'];
+      }else{return null;}
+      if($orderst){return $orderst;}else{return null;}
     }
 
 
