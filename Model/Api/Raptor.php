@@ -1,222 +1,171 @@
 <?php
 namespace Qisst\Magento24\Model\Api;
 use Qisst\Magento24\Api\RaptorInterface;
-use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Event\ManagerInterface;
-use Magento\Framework\Setup\InstallDataInterface;
-use Magento\Framework\Setup\ModuleContextInterface;
-use Magento\Framework\Setup\ModuleDataSetupInterface;
-use Magento\Store\Model\GroupFactory;
-use Magento\Store\Model\ResourceModel\Group;
-use Magento\Store\Model\ResourceModel\Store;
-use Magento\Store\Model\ResourceModel\Website;
-use Magento\Store\Model\StoreFactory;
-use Magento\Store\Model\WebsiteFactory;
+
 class Raptor implements RaptorInterface
 {
-    protected $productRepository;
-    protected $resultJsonFactory;
-
-    protected $config;
-
-
-        /**
-         * @var WebsiteFactory
-         */
-        private $websiteFactory;
-        /**
-         * @var Website
-         */
-        private $websiteResourceModel;
-        /**
-         * @var StoreFactory
-         */
-        private $storeFactory;
-        /**
-         * @var GroupFactory
-         */
-        private $groupFactory;
-          /**
-         * @var Group
-         */
-        private $groupResourceModel;
-        /**
-         * @var Store
-         */
-        private $storeResourceModel;
-        /**
-         * @var ManagerInterface
-         */
-        private $eventManager;
-
-        /**
-         * InstallData constructor.
-         * @param WebsiteFactory $websiteFactory
-         * @param Website $websiteResourceModel
-         * @param Store $storeResourceModel
-         * @param Group $groupResourceModel
-         * @param StoreFactory $storeFactory
-         * @param GroupFactory $groupFactory
-         * @param ManagerInterface $eventManager
-         */
-
-    public function __construct(
-      \Magento\Config\Model\ResourceModel\Config $config,
-             WebsiteFactory $websiteFactory,
-             Website $websiteResourceModel,
-             Store $storeResourceModel,
-             Group $groupResourceModel,
-             StoreFactory $storeFactory,
-             GroupFactory $groupFactory,
-             ManagerInterface $eventManager,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-    \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory)
+  public function __construct(
+    \Magento\Config\Model\ResourceModel\Config $config,
+    \Magento\Framework\App\Helper\Context $context,
+            \Magento\Store\Model\StoreManagerInterface $storeManager,
+            \Magento\Catalog\Model\ProductFactory $productFactory,
+            \Magento\Quote\Model\QuoteManagement $quoteManagement,
+            \Magento\Customer\Model\CustomerFactory $customerFactory,
+            \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
+            \Magento\Sales\Model\Service\OrderService $orderService,
+            \Magento\Quote\Api\CartRepositoryInterface $cartRepositoryInterface,
+            \Magento\Quote\Api\CartManagementInterface $cartManagementInterface,
+            \Magento\Quote\Model\Quote\Address\Rate $shippingRate
+    )
      {
-        $this->config = $config;
-        $this->websiteFactory = $websiteFactory;
-        $this->websiteResourceModel = $websiteResourceModel;
-        $this->storeFactory = $storeFactory;
-        $this->groupFactory = $groupFactory;
-        $this->groupResourceModel = $groupResourceModel;
-        $this->storeResourceModel = $storeResourceModel;
-        $this->eventManager = $eventManager;
-        $this->productRepository = $productRepository;
-        $this->resultJsonFactory = $resultJsonFactory;
+       $this->config = $config;
+       //parent::__construct($context);
+       $this->_storeManager = $storeManager;
+            $this->_productFactory = $productFactory;
+            $this->quoteManagement = $quoteManagement;
+            $this->customerFactory = $customerFactory;
+            $this->customerRepository = $customerRepository;
+            $this->orderService = $orderService;
+            $this->cartRepositoryInterface = $cartRepositoryInterface;
+            $this->cartManagementInterface = $cartManagementInterface;
+            $this->shippingRate = $shippingRate;
      }
+
+
+
     /* This is Validator Function Only Start */
     public function returnOrderId($quoteid) {
       $entityDesired = $quoteid;
-      $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-      $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
-      $shippingAddress = $cart->getQuote()->getShippingAddress();
-      $cartId = $cart->getQuote()->getId();
-      $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
-      $connection= $this->_resources->getConnection();
-      $tableName   = $connection->getTableName('sales_order_item');
-      $tableNamefilter   = $connection->getTableName('sales_order_grid');
-      $sql = "SELECT `order_id` FROM `".$tableName."` where item_id = ". $entityDesired;
-      $itemno = $connection->fetchAll($sql);
-      $orderst = $itemno[0]['order_id'];
-      $ordern = (int)$orderst;
-      $sqlfilter = "SELECT `increment_id` FROM `".$tableNamefilter."` where entity_id = ". $ordern;
-      $orderno = $connection->fetchAll($sqlfilter);
-      $orderst = $orderno[0]['increment_id'];
-      $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/qisstpayfilter.log');
-      $logger = new \Zend\Log\Logger();
-      $logger->addWriter($writer);
-      $logger->info('Below are OrderNo Refined');
-      $logger->info($ordern);
-        return $orderst;
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
+        $shippingAddress = $cart->getQuote()->getShippingAddress();
+        $cartId = $cart->getQuote()->getId();
+        $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
+        $connection= $this->_resources->getConnection();
+        $parentTable = $connection->getTableName('sales_order');
+        $subSeqTable = $connection->getTableName('sales_order_grid');
+        $customOrderGet = "SELECT `entity_id` FROM `".$parentTable."` where quote_id =".$entityDesired ;
+        $customOrderNo = $connection->fetchAll($customOrderGet);
+        if($customOrderNo){
+          $customOrderReturn = $customOrderNo[0]['entity_id'];
+          $sqlDetail = "SELECT `increment_id` FROM `".$subSeqTable."` where entity_id =".$customOrderReturn;
+          $orderno = $connection->fetchAll($sqlDetail);
+          $orderst = $orderno[0]['increment_id'];
+        }else{return null;}
+      if($orderst){return $orderst;}else{return null;}
     }
+
+    /**
+    * @param array $orderData
+    * @return int $orderId
+    *
+    */
     public function createOrder($orderfname, $orderlname, $orderemail, $orderphone, $orderaddress1, $orderaddress2, $ordercity, $orderstate, $orderpostcode, $ordercountry, $orderquantiry, $orderprice, $ordershipping, $ordertax, $ordernote){
-      $orderInfo =[
-            'email'        => 'test@gmail.com', //customer email id
-            'currency_id'  => 'USD',
-            'address' =>[
-                'firstname'    => 'Rohan',
-                'lastname'     => 'Hapani',
-                'prefix' => '',
-                'suffix' => '',
-                'street' => 'Test Street',
-                'city' => 'Miami',
-                'country_id' => 'US',
-                'region' => 'Florida',
-                'region_id' => '18', // State region id
-                'postcode' => '98651',
-                'telephone' => '1234567890',
-                'fax' => '1234567890',
-                'save_in_address_book' => 1
-            ],
-            'items'=>
-                [
-                    //simple product
-                    [
-                        'product_id' => '10',
-                        'qty' => 10
-                    ],
-                    //configurable product
-                    [
-                        'product_id' => '70',
-                        'qty' => 2,
-                        'super_attribute' => [
-                            93 => 52,
-                            142 => 167
-                        ]
-                    ]
-                ]
-        ];
-        $store = $this->storeManager->getStore();
-        $storeId = $store->getStoreId();
-        $websiteId = $this->storeManager->getStore()->getWebsiteId();
-        $customer = $this->customerFactory->create()
-        ->setWebsiteId($websiteId)
-        ->loadByEmail($orderInfo['email']); // Customer email address
-        if(!$customer->getId()){
-            /**
-             * If Guest customer, Create new customer
-             */
-            $customer->setStore($store)
-                    ->setFirstname($orderInfo['address']['firstname'])
-                    ->setLastname($orderInfo['address']['lastname'])
-                    ->setEmail($orderInfo['email'])
-                    ->setPassword('admin@123');
-            $customer->save();
-        }
-        $quote = $this->quote->create(); //Quote Object
-        $quote->setStore($store); //set store for our quote
+      //init the store id and website id @todo pass from array
+      $orderData=[
+     'currency_id'  => 'PKR',
+     'email'        => $orderemail, //buyer email id
+     'shipping_address' =>[
+            'firstname'    => $orderfname, //address Details
+            'lastname'     => $orderlname,
+            'street' => $orderaddress1." ".$orderaddress2,
+            'city' => $ordercity,
+            'country_id' => $ordercountry,
+            'region' => $orderstate,
+            'postcode' => $orderpostcode,
+            'telephone' => $orderphone,
+            'fax' => '',
+            'save_in_address_book' => 1
+                 ],
+   'items'=> [ //array of product which order you want to create
+              ['product_id'=>'1','qty'=>$orderquantiry]
+            ]
+];
+                  $store = $this->_storeManager->getStore();
+                  $websiteId = $this->_storeManager->getStore()->getWebsiteId();
 
-        /**
-         * Registered Customer
-         */
-        $customer = $this->customerRepository->getById($customer->getId());
-        $quote->setCurrency();
-        $quote->assignCustomer($customer); //Assign Quote to Customer
+                  //init the customer
+                  $customer=$this->customerFactory->create();
+                  $customer->setWebsiteId($websiteId);
+                  $customer->loadByEmail($orderData['email']);// load customet by email address
 
-        //Add Items in Quote Object
-        foreach($orderInfo['items'] as $item){
-            $product=$this->productRepository->getById($item['product_id']);
-            if(!empty($item['super_attribute']) ) {
-                /**
-                 * Configurable Product
-                 */
-                $buyRequest = new \Magento\Framework\DataObject($item);
-                $quote->addProduct($product,$buyRequest);
-            } else {
-                /**
-                 * Simple Product
-                 */
-                $quote->addProduct($product,intval($item['qty']));
-            }
-        }
+                  //check the customer
+                  if(!$customer->getEntityId()){
 
-        //Billing & Shipping Address to Quote
-        $quote->getBillingAddress()->addData($orderInfo['address']);
-        $quote->getShippingAddress()->addData($orderInfo['address']);
+                      //If not available then create this customer
+                      $customer->setWebsiteId($websiteId)
+                          ->setStore($store)
+                          ->setFirstname($orderData['shipping_address']['firstname'])
+                          ->setLastname($orderData['shipping_address']['lastname'])
+                          ->setEmail($orderData['email'])
+                          ->setPassword($orderData['email']);
 
-        // Set Shipping Method
-        $shippingAddress = $quote->getShippingAddress();
-        $shippingAddress->setCollectShippingRates(true)
-                        ->collectShippingRates()
-                        ->setShippingMethod('freeshipping_freeshipping'); //shipping method code, Make sure free shipping method is enabled
-        $quote->setPaymentMethod('checkmo'); //Payment Method Code, Make sure checkmo payment method is enabled
-        $quote->setInventoryProcessed(false);
-        $quote->save();
-        $quote->getPayment()->importData(['method' => 'checkmo']);
+                      $customer->save();
+                  }
 
-        // Collect Quote Totals & Save
-        $quote->collectTotals()->save();
-        // Create Order From Quote Object
-        $order = $this->quoteManagement->submit($quote);
-        // Send Order Email to Customer Email ID
-        $this->orderSender->send($order);
-        // Get Order Increment ID
-        $orderId = $order->getIncrementId();
-        if($orderId){
-            $result['success'] = $orderId;
-        } else {
-            $result = [ 'error' => true,'msg' => 'Error occurs for Order placed'];
-        }
-      return $result;
+                  //init the quote
+                  $cart_id = $this->cartManagementInterface->createEmptyCart();
+                  $cart = $this->cartRepositoryInterface->get($cart_id);
+
+                  $cart->setStore($store);
+
+                  // if you have already had the buyer id, you can load customer directly
+                  $customer= $this->customerRepository->getById($customer->getEntityId());
+                  $cart->setCurrency();
+                  $cart->assignCustomer($customer); //Assign quote to customer
+
+                  //add items in quote
+                  foreach($orderData['items'] as $item){
+                      $product = $this->_productFactory->create()->load($item['product_id']);
+                      $cart->addProduct(
+                          $product,
+                          intval($item['qty'])
+                      );
+                  }
+
+                  //Set Address to quote @todo add section in order data for seperate billing and handle it
+                  $cart->getBillingAddress()->addData($orderData['shipping_address']);
+                  $cart->getShippingAddress()->addData($orderData['shipping_address']);
+
+                  // Collect Rates, Set Shipping & Payment Method
+                  $this->shippingRate
+                      ->setCode('freeshipping_freeshipping')
+                      ->getPrice(1);
+
+                  $shippingAddress = $cart->getShippingAddress();
+
+                  //@todo set in order data
+                  $shippingAddress->setCollectShippingRates(true)
+                      ->collectShippingRates()
+                      ->setShippingMethod('flatrate_flatrate'); //shipping method
+                  //$cart->getShippingAddress(0);
+
+                  $cart->setPaymentMethod('checkmo'); //payment method
+
+                  //@todo insert a variable to affect the invetory
+                  $cart->setInventoryProcessed(false);
+
+                  // Set sales order payment
+                  $cart->getPayment()->importData(['method' => 'checkmo']);
+
+                  // Collect total and save
+                  $cart->collectTotals();
+
+
+
+                  // Submit the quote and create the order
+                  // $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                  // $order = $objectManager->create('\Magento\Sales\Model\Order')->load(53);
+                  // $order->addStatusHistoryComment('This comment is programatically added to last order in this Magento setup');
+                  // $order->save();
+
+
+                  $cart->save();
+                  //$cart = $this->cartRepositoryInterface->get($cart->getId());
+                  //return $cart->getId();
+
+                  $order_id = $this->cartManagementInterface->placeOrder($cart->getId());
+                  return $cart_id;
     }
 /* This is Validator Function Only  End */
 }
