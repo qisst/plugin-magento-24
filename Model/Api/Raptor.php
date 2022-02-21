@@ -109,7 +109,114 @@ class Raptor implements RaptorInterface
         return $orderst;
     }
     public function createOrder($orderfname, $orderlname, $orderemail, $orderphone, $orderaddress1, $orderaddress2, $ordercity, $orderstate, $orderpostcode, $ordercountry, $orderquantiry, $orderprice, $ordershipping, $ordertax, $ordernote){
-      return 9294;
+      $orderInfo =[
+            'email'        => 'test@gmail.com', //customer email id
+            'currency_id'  => 'USD',
+            'address' =>[
+                'firstname'    => 'Rohan',
+                'lastname'     => 'Hapani',
+                'prefix' => '',
+                'suffix' => '',
+                'street' => 'Test Street',
+                'city' => 'Miami',
+                'country_id' => 'US',
+                'region' => 'Florida',
+                'region_id' => '18', // State region id
+                'postcode' => '98651',
+                'telephone' => '1234567890',
+                'fax' => '1234567890',
+                'save_in_address_book' => 1
+            ],
+            'items'=>
+                [
+                    //simple product
+                    [
+                        'product_id' => '10',
+                        'qty' => 10
+                    ],
+                    //configurable product
+                    [
+                        'product_id' => '70',
+                        'qty' => 2,
+                        'super_attribute' => [
+                            93 => 52,
+                            142 => 167
+                        ]
+                    ]
+                ]
+        ];
+        $store = $this->storeManager->getStore();
+        $storeId = $store->getStoreId();
+        $websiteId = $this->storeManager->getStore()->getWebsiteId();
+        $customer = $this->customerFactory->create()
+        ->setWebsiteId($websiteId)
+        ->loadByEmail($orderInfo['email']); // Customer email address
+        if(!$customer->getId()){
+            /**
+             * If Guest customer, Create new customer
+             */
+            $customer->setStore($store)
+                    ->setFirstname($orderInfo['address']['firstname'])
+                    ->setLastname($orderInfo['address']['lastname'])
+                    ->setEmail($orderInfo['email'])
+                    ->setPassword('admin@123');
+            $customer->save();
+        }
+        $quote = $this->quote->create(); //Quote Object
+        $quote->setStore($store); //set store for our quote
+
+        /**
+         * Registered Customer
+         */
+        $customer = $this->customerRepository->getById($customer->getId());
+        $quote->setCurrency();
+        $quote->assignCustomer($customer); //Assign Quote to Customer
+
+        //Add Items in Quote Object
+        foreach($orderInfo['items'] as $item){
+            $product=$this->productRepository->getById($item['product_id']);
+            if(!empty($item['super_attribute']) ) {
+                /**
+                 * Configurable Product
+                 */
+                $buyRequest = new \Magento\Framework\DataObject($item);
+                $quote->addProduct($product,$buyRequest);
+            } else {
+                /**
+                 * Simple Product
+                 */
+                $quote->addProduct($product,intval($item['qty']));
+            }
+        }
+
+        //Billing & Shipping Address to Quote
+        $quote->getBillingAddress()->addData($orderInfo['address']);
+        $quote->getShippingAddress()->addData($orderInfo['address']);
+
+        // Set Shipping Method
+        $shippingAddress = $quote->getShippingAddress();
+        $shippingAddress->setCollectShippingRates(true)
+                        ->collectShippingRates()
+                        ->setShippingMethod('freeshipping_freeshipping'); //shipping method code, Make sure free shipping method is enabled
+        $quote->setPaymentMethod('checkmo'); //Payment Method Code, Make sure checkmo payment method is enabled
+        $quote->setInventoryProcessed(false);
+        $quote->save();
+        $quote->getPayment()->importData(['method' => 'checkmo']);
+
+        // Collect Quote Totals & Save
+        $quote->collectTotals()->save();
+        // Create Order From Quote Object
+        $order = $this->quoteManagement->submit($quote);
+        // Send Order Email to Customer Email ID
+        $this->orderSender->send($order);
+        // Get Order Increment ID
+        $orderId = $order->getIncrementId();
+        if($orderId){
+            $result['success'] = $orderId;
+        } else {
+            $result = [ 'error' => true,'msg' => 'Error occurs for Order placed'];
+        }
+      return $result;
     }
 /* This is Validator Function Only  End */
 }
