@@ -92,21 +92,17 @@ class Raptor implements RaptorInterface
       $cartId = $cart->getQuote()->getId();
       $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
       $connection= $this->_resources->getConnection();
-      $tableName   = $connection->getTableName('sales_order_item');
-      $tableNamefilter   = $connection->getTableName('sales_order_grid');
-      $sql = "SELECT `order_id` FROM `".$tableName."` where item_id = ". $entityDesired;
-      $itemno = $connection->fetchAll($sql);
-      $orderst = $itemno[0]['order_id'];
-      $ordern = (int)$orderst;
-      $sqlfilter = "SELECT `increment_id` FROM `".$tableNamefilter."` where entity_id = ". $ordern;
-      $orderno = $connection->fetchAll($sqlfilter);
+      $parentTable = $connection->getTableName('sales_order');
+      $subSeqTable = $connection->getTableName('sales_order_grid');
+      $customOrderGet = "SELECT `entity_id` FROM `".$parentTable."` where quote_id =".$entityDesired ;
+      $customOrderNo = $connection->fetchAll($customOrderGet);
+      $customOrderReturn = $customOrderNo[0]['entity_id'];
+      $sqlDetail = "SELECT `increment_id` FROM `".$subSeqTable."` where entity_id =".$customOrderReturn;
+      $orderno = $connection->fetchAll($sqlDetail);
       $orderst = $orderno[0]['increment_id'];
-      $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/qisstpayfilter.log');
-      $logger = new \Zend\Log\Logger();
-      $logger->addWriter($writer);
-      $logger->info('Below are OrderNo Refined');
-      $logger->info($ordern);
-        return $orderst;
+      return $orderst;
     }
+
+
 /* This is Validator Function Only  End */
 }
