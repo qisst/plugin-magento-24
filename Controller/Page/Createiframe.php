@@ -131,13 +131,6 @@ class createiframe extends \Magento\Framework\App\Action\Action
         curl_close($curl);
 
         $result = $this->resultJsonFactory->create();
-
-        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/qisstpay.log');
-        $logger = new \Zend\Log\Logger();
-        $logger->addWriter($writer);
-        $logger->info('Below are OrderNo Refined');
-        $logger->info($orderno);
-        $logger->info('CartID: '.$cartId);
         return $result->setData(json_decode($response, 1));
     }
 }
