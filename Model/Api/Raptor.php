@@ -86,6 +86,7 @@ class Raptor implements RaptorInterface
     /* This is Validator Function Only Start */
     public function returnOrderId($quoteid) {
       $entityDesired = $quoteid;
+      if(!$quoteid){$age = array("orderId"=>null);$response[0] = $age;return $response;}
       $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
       $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
       $shippingAddress = $cart->getQuote()->getShippingAddress();
@@ -101,8 +102,8 @@ class Raptor implements RaptorInterface
         $sqlDetail = "SELECT `increment_id` FROM `".$subSeqTable."` where entity_id =".$customOrderReturn;
         $orderno = $connection->fetchAll($sqlDetail);
         $orderst = $orderno[0]['increment_id'];
-      }else{return null;}
-      if($orderst){return $orderst;}else{return null;}
+      }else{$age = array("orderId"=>null);$response[0] = $age;return $response;}
+      if($orderst){$age = array("orderId"=>$orderst);$response[0] = $age;return $response;}else{return null;}
     }
 
 
