@@ -65,17 +65,7 @@ class createiframe extends \Magento\Framework\App\Action\Action
         $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
         $shippingAddress = $cart->getQuote()->getShippingAddress();
         $cartId = $cart->getQuote()->getId();
-
-        $this->_resources = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\App\ResourceConnection');
-        $connection= $this->_resources->getConnection();
-        $tableName   = $connection->getTableName('quote');
-        $sql = "SELECT `reserved_order_id` FROM `quote` where entity_id = ". $cartId;
-        $orderno = $connection->fetchAll($sql);
         $cart_data = $shippingAddress->getData();
-        $objctManager = \Magento\Framework\App\ObjectManager::getInstance();
-
-
-
         $remote = $objctManager->get('Magento\Framework\HTTP\PhpEnvironment\RemoteAddress');
         curl_setopt_array($curl, array(
           CURLOPT_URL => $url,
