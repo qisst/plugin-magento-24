@@ -66,7 +66,7 @@ class createiframe extends \Magento\Framework\App\Action\Action
         $shippingAddress = $cart->getQuote()->getShippingAddress();
         $cartId = $cart->getQuote()->getId();
         $cart_data = $shippingAddress->getData();
-        $remote = $objctManager->get('Magento\Framework\HTTP\PhpEnvironment\RemoteAddress');
+        $remote = $objectManager->get('Magento\Framework\HTTP\PhpEnvironment\RemoteAddress');
         curl_setopt_array($curl, array(
           CURLOPT_URL => $url,
           CURLOPT_RETURNTRANSFER => true,
